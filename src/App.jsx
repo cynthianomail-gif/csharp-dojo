@@ -72,7 +72,7 @@ export default function App() {
     <div style={{
       width: '100vw', height: '100vh',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: '#050508',
+      background: 'var(--bg-0)',
     }}>
       {/* Mobile frame */}
       <div style={{

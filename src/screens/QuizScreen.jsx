@@ -3,7 +3,7 @@ import * as Icons from '../components/Icons'
 import { STAGES_META } from '../data/lessons'
 
 function Confetti() {
-  const colors = ['#22D3EE', '#7C5CFF', '#10B981', '#F59E0B', '#FFFFFF', '#FF6B9D']
+  const colors = ['#C4A8FF', '#FFD6E8', '#B5EAD7', '#FFE4A3', '#A5C8FF', '#FFFFFF']
   return (
     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 5 }}>
       {Array.from({ length: 18 }).map((_, i) => (

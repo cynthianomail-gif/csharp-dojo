@@ -1,25 +1,25 @@
 :root {
-  --bg-0: #0B0B12;
-  --bg-1: #13131C;
-  --bg-2: #1A1A26;
-  --bg-3: #22222F;
-  --line: rgba(255,255,255,0.07);
-  --line-2: rgba(255,255,255,0.12);
-  --text-0: #F5F5FA;
-  --text-1: #B6B7C8;
-  --text-2: #6E6F85;
-  --text-3: #4A4B5E;
+  --bg-0: #15172B;
+  --bg-1: #1D1F38;
+  --bg-2: #272A47;
+  --bg-3: #333759;
+  --line: rgba(255,255,255,0.08);
+  --line-2: rgba(255,255,255,0.14);
+  --text-0: #F4F2FF;
+  --text-1: #BEBDD8;
+  --text-2: #7B7B99;
+  --text-3: #4D4D66;
 
-  --accent: #7C5CFF;
-  --accent-2: #22D3EE;
-  --accent-glow: rgba(124, 92, 255, 0.35);
+  --accent: #C4A8FF;
+  --accent-2: #FFD6E8;
+  --accent-glow: rgba(196, 168, 255, 0.4);
 
-  --stage-1: #3B82F6;
-  --stage-1-glow: rgba(59, 130, 246, 0.35);
-  --stage-2: #10B981;
-  --stage-2-glow: rgba(16, 185, 129, 0.35);
-  --stage-3: #F59E0B;
-  --stage-3-glow: rgba(245, 158, 11, 0.35);
+  --stage-1: #A5C8FF;
+  --stage-1-glow: rgba(165, 200, 255, 0.4);
+  --stage-2: #B5EAD7;
+  --stage-2-glow: rgba(181, 234, 215, 0.4);
+  --stage-3: #FFE4A3;
+  --stage-3-glow: rgba(255, 228, 163, 0.4);
 
   --code-bg: #1E1E1E;
   --code-keyword: #569CD6;
@@ -28,6 +28,7 @@
   --code-number: #B5CEA8;
   --code-type: #4EC9B0;
   --code-fn: #DCDCAA;
+  --code-unity: #9CDCFE;
   --code-text: #D4D4D4;
 
   --ok: #22C55E;

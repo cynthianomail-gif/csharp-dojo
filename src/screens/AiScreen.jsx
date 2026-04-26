@@ -78,7 +78,7 @@ function Bubble({ msg }) {
         border: isUser ? 'none' : '1px solid var(--line)',
         color: isUser ? 'white' : 'var(--text-0)',
         fontSize: 13, lineHeight: 1.65,
-        boxShadow: isUser ? '0 4px 14px rgba(124,92,255,0.25)' : 'none',
+        boxShadow: isUser ? '0 4px 14px rgba(196,168,255,0.25)' : 'none',
       }}>
         <MessageContent text={msg.content} />
       </div>
@@ -252,7 +252,7 @@ export default function AiScreen({ lesson, onClose }) {
       {/* Panel */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0, height: '84%',
-        background: 'linear-gradient(180deg,#14141F 0%,#0F0F18 100%)',
+        background: 'linear-gradient(180deg,var(--bg-1) 0%,var(--bg-0) 100%)',
         borderTop: '1px solid rgba(124,92,255,0.3)',
         borderRadius: '20px 20px 0 0',
         boxShadow: '0 -20px 40px rgba(0,0,0,0.5)',
@@ -387,7 +387,7 @@ export default function AiScreen({ lesson, onClose }) {
                 color: input.trim() && !loading ? 'white' : 'var(--text-3)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: input.trim() && !loading ? 'pointer' : 'not-allowed',
-                boxShadow: input.trim() && !loading ? '0 4px 12px rgba(34,211,238,0.3)' : 'none',
+                boxShadow: input.trim() && !loading ? '0 4px 12px rgba(255,214,232,0.3)' : 'none',
                 transition: 'all 0.2s',
               }}
             >
