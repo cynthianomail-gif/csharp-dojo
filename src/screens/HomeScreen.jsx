@@ -194,7 +194,7 @@ export default function HomeScreen({ completed, onLesson, onBoss, tab, onTabChan
       <div style={{ position: 'absolute', width: 180, height: 180, background: 'var(--accent-2)', bottom: -40, left: -30, borderRadius: '50%', filter: 'blur(60px)', opacity: 0.15, pointerEvents: 'none' }} />
 
       {/* Top bar */}
-      <div style={{ position: 'relative', padding: '14px 20px 0', flexShrink: 0 }}>
+      <div style={{ position: 'relative', paddingTop: 'max(14px, env(safe-area-inset-top, 14px))', paddingLeft: 20, paddingRight: 20, paddingBottom: 0, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
           <div style={{ width: 28 }} />
           <div style={{

@@ -122,7 +122,8 @@ export default function BossScreen({ boss, onComplete, onBack }) {
     <div style={{ position: 'relative', width: '100%', height: '100%', background: 'var(--bg-0)', overflow: 'hidden' }}>
       {/* Header */}
       <div style={{
-        padding: '12px 18px 10px',
+        paddingTop: 'max(12px, env(safe-area-inset-top, 12px))',
+        paddingBottom: 10, paddingLeft: 18, paddingRight: 18,
         borderBottom: '1px solid var(--line)',
         background: 'rgba(21,23,43,0.88)', backdropFilter: 'blur(12px)',
       }}>

@@ -147,7 +147,8 @@ export default function LessonScreen({ lesson, completed, onBack, onQuiz, onAi, 
       {/* Sticky nav */}
       <div style={{
         position: 'sticky', top: 0, zIndex: 10,
-        padding: '12px 18px 10px',
+        paddingTop: 'max(12px, env(safe-area-inset-top, 12px))',
+        paddingBottom: 10, paddingLeft: 18, paddingRight: 18,
         background: 'rgba(21,23,43,0.88)',
         backdropFilter: 'blur(12px)',
         borderBottom: '1px solid var(--line)',
