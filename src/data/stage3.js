@@ -73,7 +73,7 @@ public class HelloUnity : MonoBehaviour
     }
 }`,
         unityContext:
-          '建立 Script 的步驟：在 Project 視窗右鍵 → Create → C# Script。檔名就是類別名稱，兩者必須完全一致（包括大小寫）！建立後，把 Script 拖到 Hierarchy 中的 GameObject 上，或直接在 Inspector 中點「Add Component」搜尋。',
+          '一個 Script 本身不會自動執行——它必須被附加到場景中的 GameObject 上才有效。同一個 Script 可以附加到多個 GameObject，每個附加都是獨立的實例，各自有自己的欄位資料。這和 C# 的類別/物件關係完全一致：Script 是類別，每個附加都是一個物件。',
       },
     ],
     commonPitfalls: [
@@ -275,21 +275,36 @@ public class Movement : MonoBehaviour
         heading: '旋轉',
         description:
           '旋轉物件可以用 transform.Rotate 加減角度，或直接設定 rotation（使用 Quaternion）。LookAt 讓物件面向目標，Quaternion.Slerp 可以做出平滑的旋轉過渡。',
-        codeExample: `// 旋轉
-transform.Rotate(0, 90, 0);               // 旋轉 90 度（Y 軸）
-transform.rotation = Quaternion.identity;  // 重置旋轉
+        codeExample: `using UnityEngine;
 
-// 面向目標
-Transform target; // 假設已賦值
-transform.LookAt(target);
+public class Rotation : MonoBehaviour
+{
+    public Transform target;
+    public float rotateSpeed = 90f;
 
-// 平滑旋轉（Slerp）
-Quaternion targetRot = Quaternion.LookRotation(direction);
-transform.rotation = Quaternion.Slerp(
-    transform.rotation,
-    targetRot,
-    10f * Time.deltaTime
-);`,
+    void Update()
+    {
+        // 每秒旋轉 rotateSpeed 度（Y 軸）
+        transform.Rotate(0, rotateSpeed * Time.deltaTime, 0);
+
+        // 重置旋轉
+        // transform.rotation = Quaternion.identity;
+
+        // 面向目標
+        // transform.LookAt(target);
+
+        // 平滑旋轉（Slerp）
+        if (target != null)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(target.position - transform.position);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRot,
+                10f * Time.deltaTime
+            );
+        }
+    }
+}`,
       },
       {
         heading: 'Local vs World 空間',
@@ -447,7 +462,7 @@ public class InputDemo : MonoBehaviour
         'GetKeyDown 只在按下的「那一幀」回傳 true，之後持續按住不會再觸發。這正是跳躍所需要的——按一下跳一次，不是按住就一直跳。GetKey 則在持續按住時每幀都是 true，適合移動等持續行為。',
     },
     handsOn: {
-      task: '建立一個簡單的角色控制器：WASD 移動角色，Space 鍵按下時在 Console 印出「跳躍！」（用 GetKeyDown），左鍵點擊場景時印出「點擊位置：{mousePosition}」。所有輸入都在 Update 中處理。',
+      task: '建立一個簡單的角色控制器：WASD 移動角色，Space 鍵按下時在 Console 印出「跳躍！」（用 GetKeyDown），左鍵點擊場景時用 Debug.Log 印出滑鼠的螢幕座標（Input.mousePosition）。所有輸入都在 Update 中處理。',
       hint: '移動用 GetAxis 或 GetKey；跳躍事件用 GetKeyDown(KeyCode.Space)；滑鼠左鍵用 GetMouseButtonDown(0)，位置用 Input.mousePosition。',
     },
   },
