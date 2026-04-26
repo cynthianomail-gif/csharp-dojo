@@ -96,6 +96,15 @@ public class HelloUnity : MonoBehaviour
     handsOn: {
       task: '在 Unity 中建立一個空的 GameObject，命名為 "MyFirstObject"。建立一個 C# Script 叫做 HelloUnity，在 Start() 中用 Debug.Log 輸出「你的名字 + 已進入場景！」，然後把 Script 附加到物件上，按 Play 確認 Console 顯示訊息。',
       hint: '建立 Script：Project 視窗右鍵 → Create → C# Script。把 Script 拖到 Hierarchy 中的 GameObject 上。按 Play 後查看 Console 視窗。',
+      solution: `using UnityEngine;
+
+public class HelloUnity : MonoBehaviour
+{
+    void Start()
+    {
+        Debug.Log("艾拉 已進入場景！");
+    }
+}`,
     },
   },
   {
@@ -225,6 +234,15 @@ public class Player : MonoBehaviour
     handsOn: {
       task: '建立一個 Script，在 Awake、OnEnable、Start、Update 各放一個 Debug.Log，輸出執行順序編號（1、2、3、持續）。附加到場景物件後按 Play，觀察 Console 中訊息的順序，確認生命週期的執行時機。',
       hint: 'Update 每幀都會印出訊息，可以在 Debug.Log 中加上 Time.frameCount 顯示幀數，讓輸出更易讀。',
+      solution: `using UnityEngine;
+
+public class LifecycleDemo : MonoBehaviour
+{
+    void Awake()    { Debug.Log("1 - Awake"); }
+    void OnEnable() { Debug.Log("2 - OnEnable"); }
+    void Start()    { Debug.Log("3 - Start"); }
+    void Update()   { Debug.Log($"4 - Update（幀 {Time.frameCount}）"); }
+}`,
     },
   },
   {
@@ -351,6 +369,20 @@ transform.position += transform.forward * speed * Time.deltaTime;`,
     handsOn: {
       task: '建立一個 Cube，附加 Movement Script，讓玩家用 WASD 或方向鍵控制 Cube 在 XZ 平面移動（Y 軸不動）。確保移動有乘以 Time.deltaTime，並在 Inspector 中把速度設為 5。按 Play 後測試移動是否順暢。',
       hint: '使用 Input.GetAxis("Horizontal") 和 Input.GetAxis("Vertical") 取得輸入，組合成 Vector3(h, 0, v) 方向，乘以 speed * Time.deltaTime 後用 transform.Translate 移動。',
+      solution: `using UnityEngine;
+
+public class Movement : MonoBehaviour
+{
+    public float speed = 5f;
+
+    void Update()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        Vector3 dir = new Vector3(h, 0, v);
+        transform.Translate(dir * speed * Time.deltaTime);
+    }
+}`,
     },
   },
   {
@@ -464,6 +496,25 @@ public class InputDemo : MonoBehaviour
     handsOn: {
       task: '建立一個簡單的角色控制器：WASD 移動角色，Space 鍵按下時在 Console 印出「跳躍！」（用 GetKeyDown），左鍵點擊場景時用 Debug.Log 印出滑鼠的螢幕座標（Input.mousePosition）。所有輸入都在 Update 中處理。',
       hint: '移動用 GetAxis 或 GetKey；跳躍事件用 GetKeyDown(KeyCode.Space)；滑鼠左鍵用 GetMouseButtonDown(0)，位置用 Input.mousePosition。',
+      solution: `using UnityEngine;
+
+public class PlayerInput : MonoBehaviour
+{
+    public float speed = 5f;
+
+    void Update()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        transform.Translate(new Vector3(h, 0, v) * speed * Time.deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            Debug.Log("跳躍！");
+
+        if (Input.GetMouseButtonDown(0))
+            Debug.Log($"滑鼠位置：{Input.mousePosition}");
+    }
+}`,
     },
   },
   {
@@ -573,6 +624,20 @@ public class PickupItem : MonoBehaviour
     handsOn: {
       task: '建立一個「金幣拾取」場景：Sphere 作為玩家（有 Rigidbody + SphereCollider），Cube 作為金幣（有 BoxCollider，勾選 Is Trigger）。金幣腳本在 OnTriggerEnter 中偵測玩家進入，印出「撿到金幣！」並 Destroy 自身。玩家用鍵盤移動，走到金幣上使其消失。',
       hint: '金幣的 Collider 勾選 Is Trigger；玩家需要有 Tag "Player"。金幣 Script 的 OnTriggerEnter 用 other.CompareTag("Player") 判斷是否是玩家。',
+      solution: `// 金幣 Script（附加到 Cube）
+using UnityEngine;
+
+public class Coin : MonoBehaviour
+{
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("撿到金幣！");
+            Destroy(gameObject);
+        }
+    }
+}`,
     },
   },
   {
@@ -691,6 +756,25 @@ public class MenuController : MonoBehaviour
     handsOn: {
       task: '建立一個簡易計分 UI：在 Canvas 下建立一個 TextMeshProUGUI 顯示「Score: 0」和一個 Button「+10分」。建立 ScoreUI Script，按下 Button 時分數加 10 並更新文字。用 [SerializeField] 在 Inspector 中綁定 UI 元件，用程式碼 AddListener 綁定按鈕事件。',
       hint: '需要 using TMPro 和 using UnityEngine.UI。TextMeshProUGUI 的文字用 .text 屬性更新；Button 事件用 button.onClick.AddListener(方法名稱)。',
+      solution: `using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+
+public class ScoreUI : MonoBehaviour
+{
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private Button addButton;
+    private int score = 0;
+
+    void Start()
+    {
+        addButton.onClick.AddListener(AddScore);
+        UpdateUI();
+    }
+
+    void AddScore() { score += 10; UpdateUI(); }
+    void UpdateUI() { scoreText.text = $"Score: {score}"; }
+}`,
     },
   },
   {
@@ -850,6 +934,36 @@ public class ScoreSystem : MonoBehaviour
     handsOn: {
       task: '建立一個「倒數開始」系統：按下空白鍵後，啟動協程從 3 倒數到 1，每秒在 Console 輸出「3...」「2...」「1...」「GO！」，最後用 UnityEvent 觸發遊戲開始事件（訂閱者印出「遊戲開始！」）。',
       hint: '使用 IEnumerator 搭配 yield return new WaitForSeconds(1f) 做每秒倒數；在協程結束時 Invoke UnityEvent。記得加 using System.Collections 和 using UnityEngine.Events。',
+      solution: `using System.Collections;
+using UnityEngine;
+using UnityEngine.Events;
+
+public class CountdownSystem : MonoBehaviour
+{
+    public UnityEvent onGameStart;
+
+    void Start()
+    {
+        onGameStart.AddListener(() => Debug.Log("遊戲開始！"));
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            StartCoroutine(Countdown());
+    }
+
+    IEnumerator Countdown()
+    {
+        for (int i = 3; i >= 1; i--)
+        {
+            Debug.Log($"{i}...");
+            yield return new WaitForSeconds(1f);
+        }
+        Debug.Log("GO！");
+        onGameStart?.Invoke();
+    }
+}`,
     },
   },
 ]

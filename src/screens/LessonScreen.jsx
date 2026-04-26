@@ -68,6 +68,7 @@ function PitfallCard({ pitfalls }) {
 }
 
 function HandsOnCard({ handsOn }) {
+  const [showSolution, setShowSolution] = useState(false)
   if (!handsOn) return null
   return (
     <div style={{
@@ -80,9 +81,31 @@ function HandsOnCard({ handsOn }) {
         ✏ 實作練習
       </div>
       <div style={{ fontSize: 13, color: 'var(--text-0)', lineHeight: 1.65, marginBottom: 8 }}>{handsOn.task}</div>
-      <div style={{ fontSize: 11, color: 'var(--text-2)', lineHeight: 1.5 }}>
+      <div style={{ fontSize: 11, color: 'var(--text-2)', lineHeight: 1.5, marginBottom: handsOn.solution ? 12 : 0 }}>
         💡 提示：{handsOn.hint}
       </div>
+      {handsOn.solution && (
+        <div>
+          <button
+            onClick={() => setShowSolution(v => !v)}
+            style={{
+              background: showSolution ? 'rgba(196,168,255,0.15)' : 'transparent',
+              border: '1px solid rgba(196,168,255,0.3)',
+              borderRadius: 6, padding: '5px 12px',
+              color: 'var(--accent)', fontFamily: 'var(--font-mono)',
+              fontSize: 11, fontWeight: 600, cursor: 'pointer',
+              transition: 'all 0.15s',
+            }}
+          >
+            {showSolution ? '▲ 收起解答' : '▼ 看參考解答'}
+          </button>
+          {showSolution && (
+            <div style={{ marginTop: 10, animation: 'slide-in 0.2s ease-out' }}>
+              <CodeBlock code={handsOn.solution} />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

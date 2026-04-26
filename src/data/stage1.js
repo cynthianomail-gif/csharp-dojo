@@ -48,6 +48,7 @@ class Program
     handsOn: {
       task: '修改 Hello World 程式，讓它輸出你的名字和你最喜歡的遊戲名稱。例如輸出「我是艾拉，我最喜歡薩爾達傳說」。',
       hint: '用 Console.WriteLine() 輸出字串，字串用雙引號包住，行尾記得加分號！',
+      solution: `Console.WriteLine("我是艾拉，我最喜歡薩爾達傳說");`,
     },
   },
   {
@@ -111,6 +112,10 @@ Console.WriteLine("答案是 " + 100); // 字串連接`,
     handsOn: {
       task: '用 Console.Write 在同一行輸出角色的名字、等級、血量，格式為「角色：艾拉｜等級：10｜HP：200」，最後再換行。',
       hint: '用多個 Console.Write() 輸出各部分，最後用 Console.WriteLine() 換行。',
+      solution: `Console.Write("角色：艾拉");
+Console.Write("｜等級：10");
+Console.Write("｜HP：200");
+Console.WriteLine();`,
     },
   },
   {
@@ -169,6 +174,14 @@ var ratio = 0.75f;      // 推斷為 float
     handsOn: {
       task: '宣告以下角色資料：名字（string）、等級（int，初始 1）、攻擊力（float，初始 10.5）、是否存活（bool，初始 true），然後用 Console.WriteLine 全部印出。',
       hint: '每個型別對應：string name, int level, float atk, bool isAlive。記得 float 數字後加 f！',
+      solution: `string name = "艾拉";
+int level = 1;
+float atk = 10.5f;
+bool isAlive = true;
+Console.WriteLine(name);
+Console.WriteLine(level);
+Console.WriteLine(atk);
+Console.WriteLine(isAlive);`,
     },
   },
   {
@@ -226,6 +239,11 @@ Console.WriteLine(s.Substring(2, 5));   // "Hello"`,
     handsOn: {
       task: '建立一個角色介紹字串，格式為「[等級10] 艾拉 | 血量：150/200」，使用字串插值組合各變數，然後全部轉為大寫輸出。',
       hint: '先用 $"..." 組合字串，再呼叫 .ToUpper() 並接收結果到新變數。',
+      solution: `int level = 10;
+string name = "艾拉";
+int hp = 150, maxHp = 200;
+string intro = $"[等級{level}] {name} | 血量：{hp}/{maxHp}";
+Console.WriteLine(intro.ToUpper());`,
     },
   },
   {
@@ -298,6 +316,12 @@ combo--;       // → 1`,
     handsOn: {
       task: '設計傷害計算：攻擊力 atk=20，防禦力 def=8，暴擊倍率 critMult=1.5f。計算：普通傷害 = atk - def；暴擊傷害 = (int)((atk - def) * critMult)；輸出兩種傷害。',
       hint: '先算 atk - def，再乘以 critMult。用 (int) 截去小數。',
+      solution: `int atk = 20, def = 8;
+float critMult = 1.5f;
+int normalDmg = atk - def;
+int critDmg = (int)((atk - def) * critMult);
+Console.WriteLine($"普通傷害：{normalDmg}");
+Console.WriteLine($"暴擊傷害：{critDmg}");`,
     },
   },
   {
@@ -371,6 +395,14 @@ string s2 = score.ToString("D4"); // "0099"（補零至4位）`,
     handsOn: {
       task: '給定字串 scoreStr = "999"，用 int.Parse 轉換；再把計算結果 damage = 3.7f 分別用截斷和四捨五入兩種方式轉為 int 並輸出，觀察差異。',
       hint: '截斷用 (int)damage，四捨五入用 Convert.ToInt32(damage)。',
+      solution: `string scoreStr = "999";
+int score = int.Parse(scoreStr);
+Console.WriteLine($"分數：{score}");
+
+float damage = 3.7f;
+int truncated = (int)damage;
+int rounded = Convert.ToInt32(damage);
+Console.WriteLine($"截斷：{truncated}，四捨五入：{rounded}");`,
     },
   },
   {
@@ -459,6 +491,17 @@ switch (day)
     handsOn: {
       task: '寫一段程式：根據血量百分比輸出狀態。血量 >= 70% → "Full Power"；40%–69% → "Caution"；10%–39% → "Danger!"；< 10% → "Critical!"。',
       hint: '用 else if 鏈，從最高條件開始判斷。可以計算 float ratio = (float)hp / maxHp;',
+      solution: `int hp = 45, maxHp = 100;
+float ratio = (float)hp / maxHp;
+
+if (ratio >= 0.7f)
+    Console.WriteLine("Full Power");
+else if (ratio >= 0.4f)
+    Console.WriteLine("Caution");
+else if (ratio >= 0.1f)
+    Console.WriteLine("Danger!");
+else
+    Console.WriteLine("Critical!");`,
     },
   },
   {
@@ -542,6 +585,12 @@ for (int i = 1; i <= 3; i++)
     handsOn: {
       task: '模擬 5 回合戰鬥：每回合角色（攻擊力 20）攻擊敵人（初始 HP 100）。用 for 迴圈跑 5 回合，每回合輸出「第 N 回合：敵人剩餘 HP XX」。',
       hint: '宣告 int enemyHp = 100，迴圈內 enemyHp -= 20，輸出時用字串插值。',
+      solution: `int enemyHp = 100;
+for (int i = 1; i <= 5; i++)
+{
+    enemyHp -= 20;
+    Console.WriteLine($"第 {i} 回合：敵人剩餘 HP {enemyHp}");
+}`,
     },
   },
   {
@@ -632,6 +681,15 @@ Console.WriteLine($"平均分：{total / scores.Length}");`,
     handsOn: {
       task: '用 while 模擬一場戰鬥：角色 HP=100，每回合被扣 (15 + 回合數*2) 點血。持續戰鬥直到 HP <= 0，輸出每回合狀況，最後輸出「第 N 回合陣亡」。',
       hint: '宣告 int hp = 100, round = 0；while (hp > 0) { round++; hp -= (15 + round * 2); }',
+      solution: `int hp = 100, round = 0;
+while (hp > 0)
+{
+    round++;
+    hp -= (15 + round * 2);
+    if (hp > 0)
+        Console.WriteLine($"第 {round} 回合：剩餘 HP {hp}");
+}
+Console.WriteLine($"第 {round} 回合陣亡");`,
     },
   },
   {
@@ -727,6 +785,15 @@ for (int row = 0; row < 3; row++)
     handsOn: {
       task: '建立一個長度 5 的 int 陣列，存放 5 位玩家的分數（自己填入數值），用 foreach 找出最高分和最低分，並輸出「最高：X 分，最低：Y 分，平均：Z 分」。',
       hint: '用兩個變數 max = arr[0], min = arr[0] 初始化，迴圈中用 if 更新。平均用 total / arr.Length。',
+      solution: `int[] scores = { 85, 92, 78, 95, 61 };
+int max = scores[0], min = scores[0], total = 0;
+foreach (int s in scores)
+{
+    if (s > max) max = s;
+    if (s < min) min = s;
+    total += s;
+}
+Console.WriteLine($"最高：{max} 分，最低：{min} 分，平均：{total / scores.Length} 分");`,
     },
   },
 ]

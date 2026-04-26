@@ -96,6 +96,29 @@ Console.WriteLine(Attack("龍王", 100, true));  // 暴擊！對龍王造成 100
     handsOn: {
       task: '為一個 RPG 角色設計三個多載的 Heal 方法：第一個只接受 int amount（直接回復血量）；第二個接受 int amount 和 float bonus（bonus 倍率加成）；第三個接受 int amount 和 bool isRevive（如果 isRevive 為 true，則先將 HP 設為 0 再加血）。全部呼叫一次並印出結果。',
       hint: '三個 Heal 方法名稱相同，但參數清單不同。用字串插值輸出每次回復後的 HP。',
+      solution: `int hp = 50;
+
+void Heal(int amount)
+{
+    hp += amount;
+    Console.WriteLine($"回復 {amount}，目前 HP：{hp}");
+}
+void Heal(int amount, float bonus)
+{
+    int healed = (int)(amount * bonus);
+    hp += healed;
+    Console.WriteLine($"加成回復 {healed}，目前 HP：{hp}");
+}
+void Heal(int amount, bool isRevive)
+{
+    if (isRevive) hp = 0;
+    hp += amount;
+    Console.WriteLine($"復活回復，目前 HP：{hp}");
+}
+
+Heal(30);
+Heal(20, 1.5f);
+Heal(50, true);`,
     },
   },
   {
@@ -199,6 +222,28 @@ hero.ShowStatus();     // 艾拉 HP: 90`,
     handsOn: {
       task: '定義一個 `Bullet` 類別，包含欄位 `float speed`、`int damage`、`bool isActive`，以及方法 `void Fire(string direction)`（印出「子彈以 speed 速度射向 direction」）和 `void Deactivate()`（將 isActive 設為 false 並印出「子彈消滅」）。建立兩顆子彈，設定不同參數後分別呼叫 Fire 和 Deactivate。',
       hint: '先定義 class Bullet { ... }，再用 new Bullet() 建立兩個實例，分別設定各自的欄位再呼叫方法。',
+      solution: `class Bullet
+{
+    public float speed;
+    public int damage;
+    public bool isActive = true;
+
+    public void Fire(string direction)
+    {
+        Console.WriteLine($"子彈以 {speed} 速度射向 {direction}");
+    }
+    public void Deactivate()
+    {
+        isActive = false;
+        Console.WriteLine("子彈消滅");
+    }
+}
+
+Bullet b1 = new Bullet { speed = 10.5f, damage = 25 };
+Bullet b2 = new Bullet { speed = 5f, damage = 50 };
+b1.Fire("右");
+b2.Fire("上");
+b1.Deactivate();`,
     },
   },
   {
@@ -310,6 +355,44 @@ Console.WriteLine(p.Hp);  // 100`,
     handsOn: {
       task: '建立一個 `PlayerStats` 類別，用 private 欄位儲存 `_hp`（最大 200）和 `_mana`（最大 100），並用 Property 公開它們（set 時限制在 0 到最大值之間）。建構子接受 `string name`、初始 hp 和初始 mana。新增 `TakeDamage(int amount)` 和 `UseMana(int cost)` 方法，並測試超出上下限的情況。',
       hint: '在 Property 的 set 中用 Math.Max(0, Math.Min(value, MAX)) 限制範圍，MAX 可以定義為 private const int。',
+      solution: `class PlayerStats
+{
+    private const int MAX_HP = 200;
+    private const int MAX_MANA = 100;
+    private int _hp, _mana;
+
+    public string Name { get; }
+    public int Hp
+    {
+        get => _hp;
+        set => _hp = Math.Max(0, Math.Min(value, MAX_HP));
+    }
+    public int Mana
+    {
+        get => _mana;
+        set => _mana = Math.Max(0, Math.Min(value, MAX_MANA));
+    }
+
+    public PlayerStats(string name, int hp, int mana)
+    {
+        Name = name; Hp = hp; Mana = mana;
+    }
+
+    public void TakeDamage(int amount)
+    {
+        Hp -= amount;
+        Console.WriteLine($"{Name} HP：{Hp}");
+    }
+    public void UseMana(int cost)
+    {
+        Mana -= cost;
+        Console.WriteLine($"{Name} MP：{Mana}");
+    }
+}
+
+var p = new PlayerStats("艾拉", 150, 80);
+p.TakeDamage(300); // 超出下限，HP = 0
+p.UseMana(200);    // 超出下限，Mana = 0`,
     },
   },
   {
@@ -408,6 +491,26 @@ foreach (Character c in party)
     handsOn: {
       task: '建立 `Enemy` 基底類別（有 string Name、int Hp、virtual void DropLoot() 輸出「掉落普通道具」）。再建立 `EliteEnemy : Enemy`（覆寫 DropLoot 先呼叫 base.DropLoot()，再輸出「額外掉落稀有裝備」）和 `BossEnemy : Enemy`（覆寫 DropLoot 輸出「掉落傳說等級武器！」）。建立一個 Enemy[] 陣列放入三種敵人，用 foreach 全部呼叫 DropLoot()。',
       hint: '用 `virtual` 在 Enemy 定義 DropLoot，子類別用 `override` 覆寫。在 EliteEnemy 的 override 裡記得 `base.DropLoot();`。',
+      solution: `class Enemy
+{
+    public string Name; public int Hp;
+    public virtual void DropLoot() { Console.WriteLine("掉落普通道具"); }
+}
+class EliteEnemy : Enemy
+{
+    public override void DropLoot()
+    {
+        base.DropLoot();
+        Console.WriteLine("額外掉落稀有裝備");
+    }
+}
+class BossEnemy : Enemy
+{
+    public override void DropLoot() { Console.WriteLine("掉落傳說等級武器！"); }
+}
+
+Enemy[] enemies = { new Enemy(), new EliteEnemy(), new BossEnemy() };
+foreach (var e in enemies) e.DropLoot();`,
     },
   },
   {
@@ -506,6 +609,34 @@ class WoodBox : IDamageable
     handsOn: {
       task: '定義介面 `IInteractable`（包含 `string GetInteractMessage()` 和 `void Interact()`）。然後建立三個類別實作它：`Door`（Interact 時輸出「門打開了！」）、`Chest`（Interact 時輸出「寶箱打開，獲得金幣 100」）、`NPC`（Interact 時輸出「你好，旅人！」）。建立 IInteractable[] 陣列，用迴圈先印出 GetInteractMessage()，再呼叫 Interact()。',
       hint: '三個類別都寫 `: IInteractable`，並實作所有方法。IInteractable[] 可以混放不同類型的物件。',
+      solution: `interface IInteractable
+{
+    string GetInteractMessage();
+    void Interact();
+}
+
+class Door : IInteractable
+{
+    public string GetInteractMessage() => "按下 E 開門";
+    public void Interact() { Console.WriteLine("門打開了！"); }
+}
+class Chest : IInteractable
+{
+    public string GetInteractMessage() => "按下 E 開寶箱";
+    public void Interact() { Console.WriteLine("寶箱打開，獲得金幣 100"); }
+}
+class NPC : IInteractable
+{
+    public string GetInteractMessage() => "按下 E 對話";
+    public void Interact() { Console.WriteLine("你好，旅人！"); }
+}
+
+IInteractable[] items = { new Door(), new Chest(), new NPC() };
+foreach (var item in items)
+{
+    Console.WriteLine(item.GetInteractMessage());
+    item.Interact();
+}`,
     },
   },
   {
@@ -613,6 +744,22 @@ Console.WriteLine($"最高分：{max}");                  // 96`,
     handsOn: {
       task: '模擬一個遊戲物品欄系統：用 `List<string>` 儲存物品，用 `Dictionary<string, int>` 儲存每樣物品的數量。新增「劍×1、藥水×3、箭矢×20」到 Dictionary；用 LINQ 找出數量超過 5 的物品並印出清單；嘗試移除「盾牌」（不存在的物品），用 ContainsKey 安全處理。',
       hint: '用 `dict.ContainsKey(key)` 在移除前確認鍵存在。LINQ 用 `dict.Where(kv => kv.Value > 5)` 篩選。',
+      solution: `var inventory = new Dictionary<string, int>
+{
+    { "劍", 1 }, { "藥水", 3 }, { "箭矢", 20 }
+};
+
+// 數量超過 5 的物品
+var bigStacks = inventory.Where(kv => kv.Value > 5);
+foreach (var item in bigStacks)
+    Console.WriteLine($"{item.Key}：{item.Value}");
+
+// 安全移除
+string toRemove = "盾牌";
+if (inventory.ContainsKey(toRemove))
+    inventory.Remove(toRemove);
+else
+    Console.WriteLine($"沒有 {toRemove} 可以移除");`,
     },
   },
   {
@@ -710,6 +857,32 @@ catch (InsufficientMpException ex)
     handsOn: {
       task: '建立一個 `SaveGame(string filename, string data)` 方法：如果 filename 是 null 或空字串，throw 一個 `ArgumentException`（訊息：「檔名不能為空」）；如果 data 長度超過 1000 字元，throw 一個自訂的 `DataTooLargeException`。在 Main 中用 try/catch 分別捕捉這兩種例外，finally 區塊輸出「存檔程序結束」。測試三種情況：正常、空檔名、資料過大。',
       hint: '自訂 DataTooLargeException 繼承 Exception，建構子傳入超出的長度。用 string.IsNullOrEmpty(filename) 判斷空字串。',
+      solution: `class DataTooLargeException : Exception
+{
+    public DataTooLargeException(int len) : base($"資料過大：{len} 字元") { }
+}
+
+void SaveGame(string filename, string data)
+{
+    if (string.IsNullOrEmpty(filename))
+        throw new ArgumentException("檔名不能為空");
+    if (data.Length > 1000)
+        throw new DataTooLargeException(data.Length);
+    Console.WriteLine($"存檔成功：{filename}");
+}
+
+// 測試三種情況
+try { SaveGame("save1", "正常資料"); }
+catch (Exception e) { Console.WriteLine(e.Message); }
+finally { Console.WriteLine("存檔程序結束"); }
+
+try { SaveGame("", "資料"); }
+catch (ArgumentException e) { Console.WriteLine(e.Message); }
+finally { Console.WriteLine("存檔程序結束"); }
+
+try { SaveGame("save3", new string('X', 1001)); }
+catch (DataTooLargeException e) { Console.WriteLine(e.Message); }
+finally { Console.WriteLine("存檔程序結束"); }`,
     },
   },
 ]
