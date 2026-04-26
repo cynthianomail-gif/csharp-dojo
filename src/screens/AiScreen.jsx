@@ -203,6 +203,10 @@ export default function AiScreen({ lesson, onClose }) {
     setInput('')
     setLoading(true)
 
+    const topicsSummary = lesson.topics
+      ? lesson.topics.map(t => `- ${t.heading}: ${t.description.slice(0, 80)}...`).join('\n')
+      : ''
+
     try {
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -215,10 +219,18 @@ export default function AiScreen({ lesson, onClose }) {
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
           max_tokens: 1000,
-          system: `你是一個親切的 C# 與 Unity 學習助理，名字叫 Sensei。
-目前學習者正在學習第 ${lesson.id} 課「${lesson.title}」。
-請用繁體中文回答，語氣溫和友善，說明簡潔易懂，善用條列式。
-提供程式碼範例時用 \`\`\`csharp 包住。`,
+          system: `你是學習者的專屬導師，名字叫 Sensei。
+
+【當前課程】第 ${lesson.id} 課「${lesson.title}」
+【課程概念】
+${topicsSummary}
+
+【教學原則】
+1. 用繁體中文回答，語氣溫和友善，說明簡潔易懂，善用條列式。
+2. 優先連結 Unity 開發場景（如遊戲數值設計、物體控制、腳本生命週期）來解釋概念。
+3. 對於測驗或練習題，不要直接給答案——用提問引導學習者思考，例如「你覺得如果條件一直是 true 會發生什麼？」
+4. 提供程式碼範例時用 \`\`\`csharp 包住。
+5. 回應保持在 300 字以內，除非學習者需要更詳細的解釋。`,
           messages: newMessages,
         }),
       })
