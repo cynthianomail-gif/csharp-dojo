@@ -101,19 +101,28 @@ function InlineCode({ text }) {
 }
 
 function TopicCard({ topic, isNew }) {
+  const sentences = topic.description
+    .split(/(?<=。)/)
+    .map(s => s.trim())
+    .filter(Boolean)
+
   return (
     <div style={{ animation: isNew ? 'slide-in 0.35s ease-out' : 'none' }}>
       <h3 style={{
-        fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700,
-        color: 'var(--text-0)', marginTop: 22, marginBottom: 8,
+        fontFamily: 'var(--font-mono)', fontSize: 14, fontWeight: 700,
+        color: 'var(--text-0)', marginTop: 28, marginBottom: 12,
         display: 'flex', alignItems: 'center', gap: 8,
       }}>
         <span style={{ color: 'var(--accent)' }}>#</span>
         {topic.heading}
       </h3>
-      <p style={{ fontSize: 14, lineHeight: 1.85, color: 'var(--text-1)', margin: '6px 0 12px' }}>
-        <InlineCode text={topic.description} />
-      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
+        {sentences.map((s, i) => (
+          <p key={i} style={{ fontSize: 15, lineHeight: 2.0, color: 'var(--text-1)', margin: 0 }}>
+            <InlineCode text={s} />
+          </p>
+        ))}
+      </div>
       {topic.codeExample && <CodeBlock code={topic.codeExample} filename={topic.filename} />}
       {topic.unityContext && <UnityCard content={topic.unityContext} />}
     </div>
