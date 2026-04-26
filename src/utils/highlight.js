@@ -18,8 +18,7 @@ const UNITY_CLASSES = new Set([
   'AudioSource','AudioClip','Camera','Canvas','Image','Text',
   'Button','Slider','Toggle','InputField',
   'Debug','Time','Input','Screen','Physics','Physics2D',
-  'SceneManager','PlayerPrefs','Resources','Instantiate',
-  'Destroy','DontDestroyOnLoad','FindObjectOfType','GetComponent',
+  'SceneManager','PlayerPrefs','Resources',
   'Color','Rect','Ray','RaycastHit','LayerMask',
   'TextMeshPro','TextMeshProUGUI',
 ])
