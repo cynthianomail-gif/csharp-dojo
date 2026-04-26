@@ -135,14 +135,14 @@ function ApiKeyModal({ onSave }) {
           </div>
           <div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 14, fontWeight: 700, color: 'var(--text-0)' }}>設定 API Key</div>
-            <div style={{ fontSize: 11, color: 'var(--text-2)' }}>需要 Anthropic API Key 才能使用 AI 助理</div>
+            <div style={{ fontSize: 11, color: 'var(--text-2)' }}>需要 Gemini API Key 才能使用 AI 助理</div>
           </div>
         </div>
         <input
           type="password"
           value={key}
           onChange={e => setKey(e.target.value)}
-          placeholder="sk-ant-..."
+          placeholder="AIza..."
           onKeyDown={e => e.key === 'Enter' && key.trim() && onSave(key.trim())}
           style={{
             width: '100%', padding: '12px 14px',
@@ -154,7 +154,7 @@ function ApiKeyModal({ onSave }) {
           autoFocus
         />
         <div style={{ fontSize: 11, color: 'var(--text-3)', marginBottom: 16, lineHeight: 1.5 }}>
-          Key 只存在瀏覽器 session 中，重新整理後需再次輸入。請前往 console.anthropic.com 取得 API Key。
+          Key 只存在瀏覽器 session 中，重新整理後需再次輸入。請前往 aistudio.google.com 免費取得 API Key。
         </div>
         <button
           onClick={() => key.trim() && onSave(key.trim())}
@@ -181,8 +181,8 @@ export default function AiScreen({ lesson, onClose }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [apiKey, setApiKey] = useState(() => sessionStorage.getItem('anthropic_key') || '')
-  const [showKeyModal, setShowKeyModal] = useState(!sessionStorage.getItem('anthropic_key'))
+  const [apiKey, setApiKey] = useState(() => sessionStorage.getItem('gemini_key') || '')
+  const [showKeyModal, setShowKeyModal] = useState(!sessionStorage.getItem('gemini_key'))
   const bottomRef = useRef(null)
 
   useEffect(() => {
@@ -190,7 +190,7 @@ export default function AiScreen({ lesson, onClose }) {
   }, [messages, loading])
 
   function saveApiKey(key) {
-    sessionStorage.setItem('anthropic_key', key)
+    sessionStorage.setItem('gemini_key', key)
     setApiKey(key)
     setShowKeyModal(false)
   }
@@ -207,19 +207,7 @@ export default function AiScreen({ lesson, onClose }) {
       ? lesson.topics.map(t => `- ${t.heading}: ${t.description.slice(0, 80)}...`).join('\n')
       : ''
 
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          system: `你是學習者的專屬導師，名字叫 Sensei。
+    const systemPrompt = `你是學習者的專屬導師，名字叫 Sensei。
 
 【當前課程】第 ${lesson.id} 課「${lesson.title}」
 【課程概念】
@@ -230,10 +218,24 @@ ${topicsSummary}
 2. 優先連結 Unity 開發場景（如遊戲數值設計、物體控制、腳本生命週期）來解釋概念。
 3. 對於測驗或練習題，不要直接給答案——用提問引導學習者思考，例如「你覺得如果條件一直是 true 會發生什麼？」
 4. 提供程式碼範例時用 \`\`\`csharp 包住。
-5. 回應保持在 300 字以內，除非學習者需要更詳細的解釋。`,
-          messages: newMessages,
-        }),
-      })
+5. 回應保持在 300 字以內，除非學習者需要更詳細的解釋。`
+
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemPrompt }] },
+            contents: newMessages.map(m => ({
+              role: m.role === 'assistant' ? 'model' : 'user',
+              parts: [{ text: m.content }],
+            })),
+            generationConfig: { maxOutputTokens: 1000 },
+          }),
+        }
+      )
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}))
@@ -241,7 +243,7 @@ ${topicsSummary}
       }
 
       const data = await response.json()
-      const aiContent = data.content?.[0]?.text || '（無回應）'
+      const aiContent = data.candidates?.[0]?.content?.parts?.[0]?.text || '（無回應）'
       setMessages(prev => [...prev, { role: 'assistant', content: aiContent }])
     } catch (err) {
       setMessages(prev => [...prev, {
