@@ -61,6 +61,7 @@ export function isLessonUnlocked(lessonId, completed) {
     // First lesson of a new stage — require previous stage boss completed
     const prevStage = STAGES_META.find(s => s.id === prevLesson.stage)
     if (prevStage && !completed.includes(prevStage.bossId)) return false
+    return true
   }
 
   return completed.includes(prev?.id)

@@ -170,10 +170,6 @@ export default function HomeScreen({ completed, onLesson, onBoss }) {
 
   const nextLesson = lessons.find(l => !completed.includes(l.id))
 
-  function handleBoss(bossId) {
-    onBoss(bossId)
-  }
-
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', background: 'var(--bg-0)', overflow: 'hidden' }}>
       <GridBg />
@@ -248,7 +244,7 @@ export default function HomeScreen({ completed, onLesson, onBoss }) {
             stage={stage}
             completed={completed}
             onLesson={onLesson}
-            onBoss={handleBoss}
+            onBoss={onBoss}
           />
         ))}
       </div>
