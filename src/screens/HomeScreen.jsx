@@ -185,42 +185,22 @@ const TABS = [
 ]
 
 export default function HomeScreen({ completed, onLesson, onBoss, tab, onTabChange, userNotes, onReset }) {
-  const done = completed.filter(id => lessons.find(l => l.id === id)).length
-
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', background: 'var(--bg-0)', overflow: 'hidden' }}>
+    <div style={{
+      position: 'relative', width: '100%', height: '100%',
+      background: 'var(--bg-0)', overflow: 'hidden',
+      display: 'flex', flexDirection: 'column',
+    }}>
       <GridBg />
       <div style={{ position: 'absolute', width: 240, height: 240, background: 'var(--accent)', top: -80, right: -60, borderRadius: '50%', filter: 'blur(60px)', opacity: 0.3, pointerEvents: 'none' }} />
       <div style={{ position: 'absolute', width: 180, height: 180, background: 'var(--accent-2)', bottom: -40, left: -30, borderRadius: '50%', filter: 'blur(60px)', opacity: 0.15, pointerEvents: 'none' }} />
-
-      {/* Top bar */}
-      <div style={{ position: 'relative', paddingTop: 'max(14px, env(safe-area-inset-top, 14px))', paddingLeft: 20, paddingRight: 20, paddingBottom: 0, flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-          <div style={{ width: 28 }} />
-          <div style={{
-            fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-            color: 'var(--text-1)', display: 'flex', alignItems: 'center', gap: 5,
-          }}>
-            <span style={{ color: 'var(--accent-2)' }}>&lt;</span>
-            C#&nbsp;道場
-            <span style={{ color: 'var(--accent-2)' }}>/&gt;</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--stage-3)', fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700 }}>
-            <Icons.Flame size={14} />
-            <span>{done}</span>
-          </div>
-        </div>
-      </div>
 
       {/* Scrollable content */}
       <div
         className="no-scrollbar"
         style={{
-          position: 'absolute',
-          top: 52,
-          left: 0, right: 0,
-          bottom: 'calc(58px + env(safe-area-inset-bottom, 0px))',
-          overflowY: 'auto',
+          flex: 1, overflowY: 'auto', position: 'relative',
+          paddingTop: 'env(safe-area-inset-top, 0px)',
         }}
       >
         {tab === 'map' && <MapTab completed={completed} onLesson={onLesson} onBoss={onBoss} />}
@@ -232,7 +212,7 @@ export default function HomeScreen({ completed, onLesson, onBoss, tab, onTabChan
 
       {/* Tab bar */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
+        flexShrink: 0, position: 'relative', zIndex: 10,
         background: 'rgba(21,23,43,0.92)', backdropFilter: 'blur(12px)',
         borderTop: '1px solid var(--line)',
         paddingTop: 10,
