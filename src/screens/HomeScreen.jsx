@@ -163,7 +163,7 @@ function StageBlock({ stage, completed, onLesson, onBoss }) {
   )
 }
 
-export default function HomeScreen({ completed, onLesson }) {
+export default function HomeScreen({ completed, onLesson, onBoss }) {
   const total = lessons.length
   const done = completed.filter(id => lessons.find(l => l.id === id)).length
   const pct = total > 0 ? (done / total) * 100 : 0
@@ -171,8 +171,7 @@ export default function HomeScreen({ completed, onLesson }) {
   const nextLesson = lessons.find(l => !completed.includes(l.id))
 
   function handleBoss(bossId) {
-    // Boss challenges show first lesson of next stage or a special message
-    alert(`Stage 挑戰「${bossId}」即將推出！`)
+    onBoss(bossId)
   }
 
   return (

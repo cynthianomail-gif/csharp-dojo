@@ -3,9 +3,11 @@ import HomeScreen from './screens/HomeScreen'
 import LessonScreen from './screens/LessonScreen'
 import QuizScreen from './screens/QuizScreen'
 import AiScreen from './screens/AiScreen'
-import { getLessonById, getNextLesson } from './data/lessons'
+import BossScreen from './screens/BossScreen'
+import { getLessonById, getNextLesson, getBossData } from './data/lessons'
 
 const STORAGE_KEY = 'csharp_dojo_progress'
+const NOTES_KEY = 'csharp_dojo_notes'
 
 function loadCompleted() {
   try {
@@ -20,17 +22,39 @@ function saveCompleted(arr) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(arr))
 }
 
+function loadNotes() {
+  try {
+    const saved = localStorage.getItem(NOTES_KEY)
+    return saved ? JSON.parse(saved) : {}
+  } catch { return {} }
+}
+
+function saveNotes(obj) {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(obj))
+}
+
 export default function App() {
-  const [screen, setScreen] = useState('home')      // 'home' | 'lesson' | 'quiz'
+  const [screen, setScreen] = useState('home')      // 'home' | 'lesson' | 'quiz' | 'boss'
   const [lessonId, setLessonId] = useState(null)
   const [completed, setCompleted] = useState(loadCompleted)
   const [aiOpen, setAiOpen] = useState(false)
+  const [userNotes, setUserNotes] = useState(loadNotes)
+  const [bossId, setBossId] = useState(null)
 
   useEffect(() => {
     saveCompleted(completed)
   }, [completed])
 
+  useEffect(() => {
+    saveNotes(userNotes)
+  }, [userNotes])
+
+  function updateNote(lessonId, text) {
+    setUserNotes(prev => ({ ...prev, [lessonId]: text }))
+  }
+
   const currentLesson = lessonId ? getLessonById(lessonId) : null
+  const currentBoss = bossId ? getBossData(bossId) : null
 
   function goLesson(id) {
     setLessonId(id)
@@ -68,6 +92,21 @@ export default function App() {
     else goHome()
   }
 
+  function goBoss(id) {
+    setBossId(id)
+    setScreen('boss')
+    setAiOpen(false)
+  }
+
+  function completeBoss() {
+    if (!bossId || completed.includes(bossId)) {
+      goHome(); return
+    }
+    const updated = [...completed, bossId]
+    setCompleted(updated)
+    goHome()
+  }
+
   return (
     <div style={{
       width: '100vw', height: '100vh',
@@ -87,6 +126,7 @@ export default function App() {
           <HomeScreen
             completed={completed}
             onLesson={goLesson}
+            onBoss={goBoss}
           />
         )}
 
@@ -97,6 +137,8 @@ export default function App() {
             onBack={goHome}
             onQuiz={goQuiz}
             onAi={() => setAiOpen(true)}
+            note={userNotes[lessonId] || ''}
+            onNoteChange={(text) => updateNote(lessonId, text)}
           />
         )}
 
@@ -106,6 +148,14 @@ export default function App() {
             onComplete={completeLesson}
             onBack={backToLesson}
             onRetry={() => {}}
+          />
+        )}
+
+        {screen === 'boss' && currentBoss && (
+          <BossScreen
+            boss={currentBoss}
+            onComplete={completeBoss}
+            onBack={goHome}
           />
         )}
 
