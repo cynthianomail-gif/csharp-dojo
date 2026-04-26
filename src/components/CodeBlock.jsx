@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { highlight } from '../utils/highlight'
 
 const COLOR = {
@@ -7,16 +8,19 @@ const COLOR = {
   n: 'var(--code-number)',
   t: 'var(--code-type)',
   f: 'var(--code-fn)',
+  u: 'var(--code-unity)',
   p: 'var(--code-text)',
 }
 
-function Tokens({ tokens }) {
-  return tokens.map(([type, text], i) => (
-    <span key={i} style={{ color: COLOR[type] || COLOR.p }}>{text}</span>
-  ))
+function Tokens({ tokens, hideComments }) {
+  return tokens.map(([type, text], i) => {
+    if (hideComments && type === 'c') return null
+    return <span key={i} style={{ color: COLOR[type] || COLOR.p }}>{text}</span>
+  })
 }
 
 export default function CodeBlock({ code, filename }) {
+  const [hideComments, setHideComments] = useState(false)
   const lines = highlight(code)
   const name = filename || 'Program.cs'
 
@@ -50,7 +54,22 @@ export default function CodeBlock({ code, filename }) {
             background: 'rgba(147,51,234,0.15)',
           }}>C#</span>
         </div>
-        <span style={{ fontSize: 10, color: 'var(--text-3)' }}>{name}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button
+            onClick={() => setHideComments(h => !h)}
+            style={{
+              fontSize: 10, fontFamily: 'var(--font-mono)',
+              padding: '2px 7px', borderRadius: 4,
+              border: `1px solid ${hideComments ? 'var(--code-comment)' : '#444'}`,
+              background: hideComments ? 'rgba(106,153,85,0.15)' : 'transparent',
+              color: hideComments ? 'var(--code-comment)' : 'var(--text-3)',
+              cursor: 'pointer', transition: 'all 0.15s',
+            }}
+          >
+            {hideComments ? '// 顯示' : '// 隱藏'}
+          </button>
+          <span style={{ fontSize: 10, color: 'var(--text-3)' }}>{name}</span>
+        </div>
       </div>
       <div style={{ display: 'flex', padding: '10px 0', overflowX: 'auto' }}>
         <div style={{
@@ -68,7 +87,7 @@ export default function CodeBlock({ code, filename }) {
         <div style={{ padding: '0 14px', flex: 1, color: 'var(--code-text)', whiteSpace: 'pre' }}>
           {lines.map((tokens, i) => (
             <div key={i} style={{ lineHeight: 1.65 }}>
-              {tokens[0]?.[1] === '' ? ' ' : <Tokens tokens={tokens} />}
+              {tokens[0]?.[1] === '' ? ' ' : <Tokens tokens={tokens} hideComments={hideComments} />}
             </div>
           ))}
         </div>
