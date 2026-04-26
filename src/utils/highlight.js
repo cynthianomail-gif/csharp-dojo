@@ -11,6 +11,19 @@ const KEYWORDS = new Set([
   'params','is','as','typeof','sizeof','object',
 ])
 
+const UNITY_CLASSES = new Set([
+  'GameObject','Transform','Vector3','Vector2','Quaternion',
+  'MonoBehaviour','Rigidbody','Rigidbody2D','Collider','Collider2D',
+  'Renderer','MeshRenderer','SpriteRenderer','Animator','Animation',
+  'AudioSource','AudioClip','Camera','Canvas','Image','Text',
+  'Button','Slider','Toggle','InputField',
+  'Debug','Time','Input','Screen','Physics','Physics2D',
+  'SceneManager','PlayerPrefs','Resources','Instantiate',
+  'Destroy','DontDestroyOnLoad','FindObjectOfType','GetComponent',
+  'Color','Rect','Ray','RaycastHit','LayerMask',
+  'TextMeshPro','TextMeshProUGUI',
+])
+
 function tokenizeLine(line) {
   if (line.trim() === '') return [['p', '']]
   const tokens = []
@@ -84,6 +97,8 @@ function tokenizeLine(line) {
       const word = line.slice(i, j)
       if (KEYWORDS.has(word)) {
         tokens.push(['k', word])
+      } else if (UNITY_CLASSES.has(word)) {
+        tokens.push(['u', word])
       } else if (/^[A-Z]/.test(word)) {
         tokens.push(['t', word])
       } else {
