@@ -28,7 +28,7 @@ function OptionButton({ option, index, state, onClick }) {
 
   const styles = {
     idle:           { bg: 'var(--bg-1)',            border: 'var(--line-2)',  label: 'var(--text-1)', accent: 'var(--text-2)', opacity: 1 },
-    selected:       { bg: 'rgba(124,92,255,0.10)', border: 'var(--accent)',  label: 'var(--text-0)', accent: 'var(--accent)', opacity: 1 },
+    selected:       { bg: 'rgba(196,168,255,0.10)', border: 'var(--accent)',  label: 'var(--text-0)', accent: 'var(--accent)', opacity: 1 },
     correct:        { bg: 'rgba(34,197,94,0.10)',  border: 'var(--ok)',      label: 'var(--text-0)', accent: 'var(--ok)',     opacity: 1 },
     wrong:          { bg: 'rgba(239,68,68,0.10)',  border: 'var(--err)',     label: 'var(--text-0)', accent: 'var(--err)',    opacity: 1 },
     'show-correct': { bg: 'rgba(34,197,94,0.10)',  border: 'var(--ok)',      label: 'var(--text-0)', accent: 'var(--ok)',     opacity: 1 },
@@ -135,7 +135,7 @@ export default function QuizScreen({ lesson, onComplete, onBack, onRetry }) {
       <div style={{
         padding: '12px 18px 10px',
         borderBottom: '1px solid var(--line)',
-        background: 'rgba(11,11,18,0.88)',
+        background: 'rgba(21,23,43,0.88)',
         backdropFilter: 'blur(12px)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -202,7 +202,7 @@ export default function QuizScreen({ lesson, onComplete, onBack, onRetry }) {
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
         padding: '12px 18px 22px',
-        background: 'rgba(11,11,18,0.95)',
+        background: 'rgba(21,23,43,0.95)',
         backdropFilter: 'blur(12px)',
         borderTop: '1px solid var(--line)',
       }}>
@@ -216,11 +216,11 @@ export default function QuizScreen({ lesson, onComplete, onBack, onRetry }) {
               border: 'none', borderRadius: 10,
               background: selected === null
                 ? 'var(--bg-2)'
-                : 'linear-gradient(180deg,#8B6BFF 0%,#6B47F0 100%)',
+                : 'linear-gradient(180deg,#C4A8FF 0%,#A88AE0 100%)',
               color: selected === null ? 'var(--text-3)' : 'white',
               fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 14,
               cursor: selected === null ? 'not-allowed' : 'pointer',
-              boxShadow: selected !== null ? '0 8px 24px rgba(124,92,255,0.35)' : 'none',
+              boxShadow: selected !== null ? '0 8px 24px rgba(196,168,255,0.35)' : 'none',
               transition: 'all 0.2s',
             }}
           >
@@ -264,7 +264,7 @@ export default function QuizScreen({ lesson, onComplete, onBack, onRetry }) {
                 flex: 1, padding: '14px',
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 border: 'none', borderRadius: 10,
-                background: 'linear-gradient(180deg,#8B6BFF 0%,#6B47F0 100%)',
+                background: 'linear-gradient(180deg,#C4A8FF 0%,#A88AE0 100%)',
                 color: 'white', fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 14, cursor: 'pointer',
               }}
             >

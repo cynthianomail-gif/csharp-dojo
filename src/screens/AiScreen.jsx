@@ -62,8 +62,8 @@ function Bubble({ msg }) {
       {!isUser && (
         <div style={{
           width: 28, height: 28, borderRadius: 8, flexShrink: 0,
-          background: 'linear-gradient(135deg,#1a1a26,#13131c)',
-          border: '1px solid rgba(34,211,238,0.3)',
+          background: 'var(--bg-2)',
+          border: '1px solid rgba(255,214,232,0.3)',
           color: 'var(--accent-2)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
@@ -74,7 +74,7 @@ function Bubble({ msg }) {
         maxWidth: '78%',
         padding: '10px 13px',
         borderRadius: isUser ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
-        background: isUser ? 'linear-gradient(180deg,#8B6BFF 0%,#6B47F0 100%)' : 'var(--bg-2)',
+        background: isUser ? 'linear-gradient(180deg,#C4A8FF 0%,#A88AE0 100%)' : 'var(--bg-2)',
         border: isUser ? 'none' : '1px solid var(--line)',
         color: isUser ? 'white' : 'var(--text-0)',
         fontSize: 13, lineHeight: 1.65,
@@ -91,8 +91,8 @@ function TypingIndicator() {
     <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
       <div style={{
         width: 28, height: 28, borderRadius: 8,
-        background: 'linear-gradient(135deg,#1a1a26,#13131c)',
-        border: '1px solid rgba(34,211,238,0.3)',
+        background: 'var(--bg-2)',
+        border: '1px solid rgba(255,214,232,0.3)',
         color: 'var(--accent-2)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
@@ -162,7 +162,7 @@ function ApiKeyModal({ onSave }) {
           style={{
             width: '100%', padding: '13px',
             border: 'none', borderRadius: 10,
-            background: key.trim() ? 'linear-gradient(180deg,#8B6BFF 0%,#6B47F0 100%)' : 'var(--bg-3)',
+            background: key.trim() ? 'linear-gradient(180deg,#C4A8FF 0%,#A88AE0 100%)' : 'var(--bg-3)',
             color: key.trim() ? 'white' : 'var(--text-3)',
             fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 14,
             cursor: key.trim() ? 'pointer' : 'not-allowed',
@@ -253,7 +253,7 @@ export default function AiScreen({ lesson, onClose }) {
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0, height: '84%',
         background: 'linear-gradient(180deg,var(--bg-1) 0%,var(--bg-0) 100%)',
-        borderTop: '1px solid rgba(124,92,255,0.3)',
+        borderTop: '1px solid rgba(196,168,255,0.3)',
         borderRadius: '20px 20px 0 0',
         boxShadow: '0 -20px 40px rgba(0,0,0,0.5)',
         display: 'flex', flexDirection: 'column',
@@ -275,8 +275,8 @@ export default function AiScreen({ lesson, onClose }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
               width: 36, height: 36, borderRadius: 10, position: 'relative',
-              background: 'linear-gradient(135deg,rgba(34,211,238,0.2),rgba(124,92,255,0.2))',
-              border: '1px solid rgba(34,211,238,0.4)',
+              background: 'linear-gradient(135deg,rgba(255,214,232,0.2),rgba(196,168,255,0.2))',
+              border: '1px solid rgba(255,214,232,0.4)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: 'var(--accent-2)',
             }}>
@@ -284,7 +284,7 @@ export default function AiScreen({ lesson, onClose }) {
               <div style={{
                 position: 'absolute', bottom: 1, right: 1,
                 width: 8, height: 8, borderRadius: '50%',
-                background: 'var(--ok)', border: '2px solid #14141F',
+                background: 'var(--ok)', border: '2px solid var(--bg-1)',
               }} />
             </div>
             <div>
@@ -358,7 +358,7 @@ export default function AiScreen({ lesson, onClose }) {
         </div>
 
         {/* Input */}
-        <div style={{ padding: '8px 14px 20px', borderTop: '1px solid var(--line)', background: 'rgba(15,15,24,0.7)' }}>
+        <div style={{ padding: '8px 14px 20px', borderTop: '1px solid var(--line)', background: 'rgba(21,23,43,0.7)' }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8,
             background: 'var(--bg-2)', border: '1px solid var(--line-2)',
