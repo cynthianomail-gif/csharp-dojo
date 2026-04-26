@@ -40,6 +40,7 @@ export default function App() {
   const [aiOpen, setAiOpen] = useState(false)
   const [userNotes, setUserNotes] = useState(loadNotes)
   const [bossId, setBossId] = useState(null)
+  const [tab, setTab] = useState('map')
 
   useEffect(() => {
     saveCompleted(completed)
@@ -107,6 +108,13 @@ export default function App() {
     goHome()
   }
 
+  function resetProgress() {
+    setCompleted([])
+    setUserNotes({})
+    saveCompleted([])
+    saveNotes({})
+  }
+
   return (
     <div style={{
       width: '100vw', height: '100vh',
@@ -127,6 +135,10 @@ export default function App() {
             completed={completed}
             onLesson={goLesson}
             onBoss={goBoss}
+            tab={tab}
+            onTabChange={setTab}
+            userNotes={userNotes}
+            onReset={resetProgress}
           />
         )}
 
