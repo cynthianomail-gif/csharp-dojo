@@ -4,7 +4,8 @@ import LessonScreen from './screens/LessonScreen'
 import QuizScreen from './screens/QuizScreen'
 import AiScreen from './screens/AiScreen'
 import BossScreen from './screens/BossScreen'
-import { getLessonById, getNextLesson, getBossData } from './data/lessons'
+import { getLessonById, getNextLesson, getBossData, STAGES_META } from './data/lessons'
+import { clearWrongAnswers } from './utils/wrongAnswers'
 
 const STORAGE_KEY   = 'csharp_dojo_progress'
 const NOTES_KEY     = 'csharp_dojo_notes'
@@ -122,6 +123,21 @@ export default function App() {
     saveNotes({})
     localStorage.removeItem('csharp_dojo_practice')
     localStorage.removeItem(FIRST_OPEN_KEY)
+    clearWrongAnswers()
+  }
+
+  function resetStage(stageId) {
+    const meta = STAGES_META.find(s => s.id === stageId)
+    if (!meta) return
+    const toRemove = new Set([...meta.lessonIds, meta.bossId])
+    const updated = completed.filter(id => !toRemove.has(id))
+    setCompleted(updated)
+    saveCompleted(updated)
+    // also clear notes for those lessons
+    const newNotes = { ...userNotes }
+    meta.lessonIds.forEach(id => { delete newNotes[id] })
+    setUserNotes(newNotes)
+    saveNotes(newNotes)
   }
 
   return (
@@ -148,6 +164,7 @@ export default function App() {
             onTabChange={setTab}
             userNotes={userNotes}
             onReset={resetProgress}
+            onResetStage={resetStage}
           />
         )}
 

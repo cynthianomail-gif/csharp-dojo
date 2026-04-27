@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import * as Icons from '../components/Icons'
 import { STAGES_META } from '../data/lessons'
+import { recordWrong } from '../utils/wrongAnswers'
 
 function Confetti() {
   const colors = ['#C4A8FF', '#FFD6E8', '#B5EAD7', '#FFE4A3', '#A5C8FF', '#FFFFFF', '#FF9ECD', '#7BE8C8']
@@ -161,6 +162,8 @@ export default function QuizScreen({ lesson, onComplete, onBack, onRetry }) {
     setSubmitted(true)
     if (selected === answer) {
       setTimeout(() => setShowCelebration(true), 500)
+    } else {
+      recordWrong({ question, options, answer, explanation, source: lesson.title })
     }
   }
 

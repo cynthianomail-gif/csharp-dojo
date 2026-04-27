@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import * as Icons from '../components/Icons'
 import { STAGES_META } from '../data/lessons'
+import { recordWrong } from '../utils/wrongAnswers'
 
 function Confetti() {
   const colors = ['#C4A8FF', '#FFD6E8', '#B5EAD7', '#FFE4A3', '#A5C8FF', '#FFFFFF']
@@ -46,7 +47,10 @@ export default function BossScreen({ boss, onComplete, onBack }) {
 
   function handleSubmit() {
     if (selected === null) return
-    if (selected !== q.answer) setAllCorrect(false)
+    if (selected !== q.answer) {
+      setAllCorrect(false)
+      recordWrong({ question: q.question, options: q.options, answer: q.answer, explanation: q.explanation, source: `Boss ${boss.id}` })
+    }
     setSubmitted(true)
   }
 
