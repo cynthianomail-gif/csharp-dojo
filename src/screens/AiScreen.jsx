@@ -31,6 +31,7 @@ function MessageContent({ text }) {
               marginTop: 8, background: 'var(--code-bg)',
               borderRadius: 6, padding: '8px 10px',
               border: '1px solid #2a2a2a',
+              overflowX: 'auto',
             }}>
               <HighlightedCode code={code} />
             </div>
@@ -71,13 +72,14 @@ function Bubble({ msg }) {
         </div>
       )}
       <div style={{
-        maxWidth: '78%',
+        maxWidth: isUser ? '78%' : '88%',
         padding: '10px 13px',
         borderRadius: isUser ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
         background: isUser ? 'linear-gradient(180deg,#C4A8FF 0%,#A88AE0 100%)' : 'var(--bg-2)',
         border: isUser ? 'none' : '1px solid var(--line)',
         color: isUser ? 'white' : 'var(--text-0)',
         fontSize: 13, lineHeight: 1.65,
+        wordBreak: 'break-word',
         boxShadow: isUser ? '0 4px 14px rgba(196,168,255,0.25)' : 'none',
       }}>
         <MessageContent text={msg.content} />
