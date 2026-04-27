@@ -181,8 +181,8 @@ export default function AiScreen({ lesson, onClose }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [apiKey, setApiKey] = useState(() => sessionStorage.getItem('gemini_key') || '')
-  const [showKeyModal, setShowKeyModal] = useState(!sessionStorage.getItem('gemini_key'))
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('gemini_key') || '')
+  const [showKeyModal, setShowKeyModal] = useState(!localStorage.getItem('gemini_key'))
   const bottomRef = useRef(null)
 
   useEffect(() => {
@@ -190,7 +190,7 @@ export default function AiScreen({ lesson, onClose }) {
   }, [messages, loading])
 
   function saveApiKey(key) {
-    sessionStorage.setItem('gemini_key', key)
+    localStorage.setItem('gemini_key', key)
     setApiKey(key)
     setShowKeyModal(false)
   }
@@ -222,7 +222,7 @@ ${topicsSummary}
 
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
