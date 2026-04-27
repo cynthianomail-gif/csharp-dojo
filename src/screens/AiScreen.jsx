@@ -135,14 +135,14 @@ function ApiKeyModal({ onSave }) {
           </div>
           <div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 14, fontWeight: 700, color: 'var(--text-0)' }}>設定 API Key</div>
-            <div style={{ fontSize: 11, color: 'var(--text-2)' }}>需要 Gemini API Key 才能使用 AI 助理</div>
+            <div style={{ fontSize: 11, color: 'var(--text-2)' }}>需要 Groq API Key 才能使用 AI 助理</div>
           </div>
         </div>
         <input
           type="password"
           value={key}
           onChange={e => setKey(e.target.value)}
-          placeholder="AIza..."
+          placeholder="gsk_..."
           onKeyDown={e => e.key === 'Enter' && key.trim() && onSave(key.trim())}
           style={{
             width: '100%', padding: '12px 14px',
@@ -154,7 +154,7 @@ function ApiKeyModal({ onSave }) {
           autoFocus
         />
         <div style={{ fontSize: 11, color: 'var(--text-3)', marginBottom: 16, lineHeight: 1.5 }}>
-          Key 只存在瀏覽器 session 中，重新整理後需再次輸入。請前往 aistudio.google.com 免費取得 API Key。
+          Key 儲存在瀏覽器中，下次不需重新輸入。請前往 console.groq.com 免費取得 API Key（不需信用卡）。
         </div>
         <button
           onClick={() => key.trim() && onSave(key.trim())}
@@ -181,8 +181,8 @@ export default function AiScreen({ lesson, onClose }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('gemini_key') || '')
-  const [showKeyModal, setShowKeyModal] = useState(!localStorage.getItem('gemini_key'))
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('groq_key') || '')
+  const [showKeyModal, setShowKeyModal] = useState(!localStorage.getItem('groq_key'))
   const bottomRef = useRef(null)
 
   useEffect(() => {
@@ -190,7 +190,7 @@ export default function AiScreen({ lesson, onClose }) {
   }, [messages, loading])
 
   function saveApiKey(key) {
-    localStorage.setItem('gemini_key', key)
+    localStorage.setItem('groq_key', key)
     setApiKey(key)
     setShowKeyModal(false)
   }
@@ -222,17 +222,20 @@ ${topicsSummary}
 
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+        'https://api.groq.com/openai/v1/chat/completions',
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+          },
           body: JSON.stringify({
-            system_instruction: { parts: [{ text: systemPrompt }] },
-            contents: newMessages.map(m => ({
-              role: m.role === 'assistant' ? 'model' : 'user',
-              parts: [{ text: m.content }],
-            })),
-            generationConfig: { maxOutputTokens: 1000 },
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              ...newMessages.map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: m.content })),
+            ],
+            max_tokens: 1000,
           }),
         }
       )
@@ -243,7 +246,7 @@ ${topicsSummary}
       }
 
       const data = await response.json()
-      const aiContent = data.candidates?.[0]?.content?.parts?.[0]?.text || '（無回應）'
+      const aiContent = data.choices?.[0]?.message?.content || '（無回應）'
       setMessages(prev => [...prev, { role: 'assistant', content: aiContent }])
     } catch (err) {
       setMessages(prev => [...prev, {
