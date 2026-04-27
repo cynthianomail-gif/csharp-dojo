@@ -22,7 +22,15 @@ function Confetti() {
   )
 }
 
+const BOSS_QUESTION_COUNT = 5
+
+function pickQuestions(allQuestions) {
+  const shuffled = [...allQuestions].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, Math.min(BOSS_QUESTION_COUNT, shuffled.length))
+}
+
 export default function BossScreen({ boss, onComplete, onBack }) {
+  const [questions, setQuestions] = useState(() => pickQuestions(boss.questions))
   const [qIdx, setQIdx] = useState(0)
   const [selected, setSelected] = useState(null)
   const [submitted, setSubmitted] = useState(false)
@@ -32,7 +40,7 @@ export default function BossScreen({ boss, onComplete, onBack }) {
   const stageMeta = STAGES_META.find(s => s.bossId === boss.id)
   const stageColor = stageMeta?.color || 'var(--accent)'
 
-  const q = boss.questions[qIdx]
+  const q = questions[qIdx]
   const isCorrect = submitted && selected === q.answer
   const letters = ['A', 'B', 'C', 'D']
 
@@ -43,7 +51,7 @@ export default function BossScreen({ boss, onComplete, onBack }) {
   }
 
   function handleNext() {
-    if (qIdx < boss.questions.length - 1) {
+    if (qIdx < questions.length - 1) {
       setQIdx(i => i + 1)
       setSelected(null)
       setSubmitted(false)
@@ -102,7 +110,7 @@ export default function BossScreen({ boss, onComplete, onBack }) {
           )}
           {!allCorrect && (
             <button
-              onClick={() => { setQIdx(0); setSelected(null); setSubmitted(false); setAllCorrect(true); setFinished(false) }}
+              onClick={() => { setQuestions(pickQuestions(boss.questions)); setQIdx(0); setSelected(null); setSubmitted(false); setAllCorrect(true); setFinished(false) }}
               style={{
                 flex: 2, padding: '14px',
                 border: 'none', borderRadius: 10,
@@ -152,7 +160,7 @@ export default function BossScreen({ boss, onComplete, onBack }) {
         <div style={{ fontSize: 11, color: 'var(--text-2)', marginTop: 2 }}>{boss.subtitle}</div>
         {/* Question progress */}
         <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
-          {boss.questions.map((_, i) => (
+          {questions.map((_, i) => (
             <div key={i} style={{
               flex: 1, height: 3, borderRadius: 99,
               background: i <= qIdx ? stageColor : 'var(--bg-3)',
@@ -166,7 +174,7 @@ export default function BossScreen({ boss, onComplete, onBack }) {
       {/* Question */}
       <div className="no-scrollbar" style={{ height: 'calc(100% - 130px - 80px)', overflowY: 'auto', padding: '18px 18px 8px' }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-3)', letterSpacing: '0.2em', marginBottom: 6 }}>
-          QUESTION {qIdx + 1} / {boss.questions.length}
+          QUESTION {qIdx + 1} / {questions.length}
         </div>
         <div style={{ fontSize: 17, lineHeight: 1.55, color: 'var(--text-0)', fontWeight: 600, marginBottom: 18 }}>
           {q.question}
@@ -259,7 +267,7 @@ export default function BossScreen({ boss, onComplete, onBack }) {
               cursor: 'pointer', boxShadow: '0 8px 24px var(--accent-glow)',
             }}
           >
-            {qIdx < boss.questions.length - 1 ? '下一題 ›' : '查看結果'}
+            {qIdx < questions.length - 1 ? '下一題 ›' : '查看結果'}
           </button>
         )}
       </div>
