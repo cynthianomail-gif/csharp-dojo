@@ -6,8 +6,9 @@ import AiScreen from './screens/AiScreen'
 import BossScreen from './screens/BossScreen'
 import { getLessonById, getNextLesson, getBossData } from './data/lessons'
 
-const STORAGE_KEY = 'csharp_dojo_progress'
-const NOTES_KEY = 'csharp_dojo_notes'
+const STORAGE_KEY   = 'csharp_dojo_progress'
+const NOTES_KEY     = 'csharp_dojo_notes'
+const FIRST_OPEN_KEY = 'csharp_dojo_first_open'
 
 function loadCompleted() {
   try {
@@ -45,6 +46,12 @@ export default function App() {
   useEffect(() => {
     saveCompleted(completed)
   }, [completed])
+
+  useEffect(() => {
+    if (!localStorage.getItem(FIRST_OPEN_KEY)) {
+      localStorage.setItem(FIRST_OPEN_KEY, new Date().toISOString().split('T')[0])
+    }
+  }, [])
 
   useEffect(() => {
     saveNotes(userNotes)
@@ -113,6 +120,8 @@ export default function App() {
     setUserNotes({})
     saveCompleted([])
     saveNotes({})
+    localStorage.removeItem('csharp_dojo_practice')
+    localStorage.removeItem(FIRST_OPEN_KEY)
   }
 
   return (

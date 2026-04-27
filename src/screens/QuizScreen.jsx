@@ -3,21 +3,66 @@ import * as Icons from '../components/Icons'
 import { STAGES_META } from '../data/lessons'
 
 function Confetti() {
-  const colors = ['#C4A8FF', '#FFD6E8', '#B5EAD7', '#FFE4A3', '#A5C8FF', '#FFFFFF']
+  const colors = ['#C4A8FF', '#FFD6E8', '#B5EAD7', '#FFE4A3', '#A5C8FF', '#FFFFFF', '#FF9ECD', '#7BE8C8']
   return (
-    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 5 }}>
-      {Array.from({ length: 18 }).map((_, i) => (
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 0 }}>
+      {Array.from({ length: 30 }).map((_, i) => (
         <div key={i} style={{
           position: 'absolute',
-          left: `${(i * 63) % 100}%`,
-          top: `${30 + (i * 17) % 30}%`,
-          width: i % 3 === 0 ? 8 : 5,
-          height: i % 3 === 0 ? 12 : 8,
+          left: `${(i * 37 + 3) % 100}%`,
+          top: `${(i * 23) % 50}%`,
+          width: i % 3 === 0 ? 9 : 5,
+          height: i % 3 === 0 ? 14 : 8,
           background: colors[i % colors.length],
           borderRadius: i % 2 === 0 ? '50%' : 2,
-          animation: `confetti-fall ${1 + (i % 3) * 0.3}s ease-out ${(i % 5) * 0.08}s forwards`,
+          animation: `confetti-fall ${0.9 + (i % 4) * 0.25}s ease-out ${(i % 7) * 0.07}s both`,
         }} />
       ))}
+    </div>
+  )
+}
+
+function CelebrationOverlay({ onContinue }) {
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 20,
+      background: 'rgba(10,12,28,0.82)',
+      backdropFilter: 'blur(4px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      animation: 'fade-in 0.25s ease-out',
+    }}>
+      <Confetti />
+      <div style={{
+        position: 'relative', zIndex: 1,
+        background: 'linear-gradient(160deg,#1D1F38,#272A47)',
+        border: '1.5px solid rgba(34,197,94,0.45)',
+        borderRadius: 24, padding: '36px 40px',
+        textAlign: 'center', minWidth: 260,
+        boxShadow: '0 0 40px rgba(34,197,94,0.2), 0 20px 60px rgba(0,0,0,0.5)',
+        animation: 'pop-in 0.45s cubic-bezier(0.175,0.885,0.32,1.275)',
+      }}>
+        <div style={{ fontSize: 56, marginBottom: 10, lineHeight: 1 }}>🎉</div>
+        <div style={{
+          fontFamily: 'var(--font-mono)', fontSize: 26, fontWeight: 800,
+          color: 'var(--ok)', letterSpacing: '0.06em', marginBottom: 6,
+        }}>CLEARED!</div>
+        <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 28, lineHeight: 1.5 }}>
+          答對了！繼續保持！
+        </div>
+        <button
+          onClick={onContinue}
+          style={{
+            width: '100%', padding: '14px',
+            border: 'none', borderRadius: 12,
+            background: 'linear-gradient(180deg,#22C55E 0%,#16A34A 100%)',
+            color: 'white', fontFamily: 'var(--font-sans)',
+            fontWeight: 700, fontSize: 15, cursor: 'pointer',
+            boxShadow: '0 8px 24px rgba(34,197,94,0.4)',
+          }}
+        >
+          繼續下一課 →
+        </button>
+      </div>
     </div>
   )
 }
@@ -95,6 +140,7 @@ function ExplainCard({ correct, explanation }) {
 export default function QuizScreen({ lesson, onComplete, onBack, onRetry }) {
   const [selected, setSelected] = useState(null)
   const [submitted, setSubmitted] = useState(false)
+  const [showCelebration, setShowCelebration] = useState(false)
 
   const { question, options, answer, explanation } = lesson.quiz
   const isCorrect = submitted && selected === answer
@@ -113,6 +159,9 @@ export default function QuizScreen({ lesson, onComplete, onBack, onRetry }) {
   function handleSubmit() {
     if (selected === null) return
     setSubmitted(true)
+    if (selected === answer) {
+      setTimeout(() => setShowCelebration(true), 500)
+    }
   }
 
   function handleRetry() {
@@ -129,7 +178,7 @@ export default function QuizScreen({ lesson, onComplete, onBack, onRetry }) {
         backgroundSize: '24px 24px',
       }} />
 
-      {isCorrect && <Confetti />}
+      {showCelebration && <CelebrationOverlay onContinue={onComplete} />}
 
       {/* Header */}
       <div style={{
@@ -228,22 +277,12 @@ export default function QuizScreen({ lesson, onComplete, onBack, onRetry }) {
             確認答案
           </button>
         )}
-        {isCorrect && (
-          <button
-            onClick={onComplete}
-            style={{
-              width: '100%', padding: '14px',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              border: 'none', borderRadius: 10,
-              background: 'linear-gradient(180deg,#22C55E 0%,#16A34A 100%)',
-              color: 'white', fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 14,
-              cursor: 'pointer',
-              boxShadow: '0 8px 24px rgba(34,197,94,0.35)',
-            }}
-          >
-            <Icons.Spark size={16} />
-            繼續下一課
-          </button>
+        {isCorrect && !showCelebration && (
+          <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ok)', opacity: 0.7, animation: 'dot-bounce 1s ease-in-out infinite' }}>
+              ✦ 答對了！
+            </div>
+          </div>
         )}
         {submitted && !isCorrect && (
           <div style={{ display: 'flex', gap: 10 }}>

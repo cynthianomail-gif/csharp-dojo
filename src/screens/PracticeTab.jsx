@@ -1,27 +1,43 @@
 import { useState } from 'react'
 import { lessons } from '../data/lessons'
 
-function getRandomQ(completed) {
+const PRACTICE_KEY = 'csharp_dojo_practice'
+
+function loadStats() {
+  try { return JSON.parse(localStorage.getItem(PRACTICE_KEY)) || { correct: 0, total: 0 } }
+  catch { return { correct: 0, total: 0 } }
+}
+
+function saveStats(s) {
+  localStorage.setItem(PRACTICE_KEY, JSON.stringify(s))
+}
+
+function getRandomQ(completed, excludeQuestion) {
   const pool = lessons.filter(l => completed.includes(l.id) && l.quiz)
   if (!pool.length) return null
-  const l = pool[Math.floor(Math.random() * pool.length)]
+  if (pool.length === 1) return { ...pool[0].quiz, lessonTitle: pool[0].title }
+  let l
+  do { l = pool[Math.floor(Math.random() * pool.length)] } while (l.quiz.question === excludeQuestion)
   return { ...l.quiz, lessonTitle: l.title }
 }
 
 export default function PracticeTab({ completed }) {
-  const [q, setQ] = useState(() => getRandomQ(completed))
+  const [q, setQ] = useState(() => getRandomQ(completed, null))
   const [selected, setSelected] = useState(null)
   const [submitted, setSubmitted] = useState(false)
-  const [stats, setStats] = useState({ correct: 0, total: 0 })
+  const [stats, setStats] = useState(loadStats)
 
   function submit() {
     if (selected === null) return
-    setStats(s => ({ correct: s.correct + (selected === q.answer ? 1 : 0), total: s.total + 1 }))
+    const isCorrect = selected === q.answer
+    const newStats = { correct: stats.correct + (isCorrect ? 1 : 0), total: stats.total + 1 }
+    setStats(newStats)
+    saveStats(newStats)
     setSubmitted(true)
   }
 
   function next() {
-    setQ(getRandomQ(completed))
+    setQ(getRandomQ(completed, q?.question))
     setSelected(null)
     setSubmitted(false)
   }
